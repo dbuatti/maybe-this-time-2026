@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule — Maybe This Time 2026</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --fuchsia: #F0306E;
+      --fuchsia-dark: #c4275a;
+      --gold: #FFCC00;
+      --white: #FFFFFF;
+      --dark: #0d0d1a;
+      --charcoal: #545454;
+      --cream: #faf8f5;
+      --light-pink: #fff0f5;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--cream);
+      color: #333;
+      min-height: 100vh;
+    }
+
+    .nav {
+      background: var(--fuchsia);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-back {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 0.75rem;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: transform 0.2s ease;
+    }
+
+    .nav-back:hover {
+      transform: translateX(-3px);
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--fuchsia) 0%, var(--fuchsia-dark) 100%);
+      padding: 3rem 1.5rem 4rem;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 2.25rem;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 1rem;
+    }
+
+    .legend {
+      max-width: 900px;
+      margin: -1.5rem auto 0;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .legend-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--charcoal);
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-dot.zoom { background: var(--fuchsia); }
+    .legend-dot.in-person { background: var(--gold); }
+    .legend-dot.recording { background: #888; }
+    .legend-dot.masterclass { background: #6c5ce7; }
+
+    .schedule {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .week {
+      margin-bottom: 3.5rem;
+    }
+
+    .week:last-child {
+      margin-bottom: 0;
+    }
+
+    .week-header {
+      margin-bottom: 1.25rem;
+    }
+
+    .week-number {
+      display: inline-block;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--fuchsia);
+      background: rgba(240, 48, 110, 0.08);
+      padding: 0.3rem 0.85rem;
+      border-radius: 50px;
+      margin-bottom: 0.5rem;
+    }
+
+    .week-dates {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #222;
+    }
+
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .day-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+    }
+
+    .day-card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+
+    .day-header {
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .day-header.zoom {
+      background: linear-gradient(135deg, var(--fuchsia), var(--fuchsia-dark));
+      color: var(--white);
+    }
+
+    .day-header.in-person {
+      background: linear-gradient(135deg, var(--gold), #e6b800);
+      color: var(--dark);
+    }
+
+    .day-header.recording {
+      background: linear-gradient(135deg, #666, #444);
+      color: var(--white);
+    }
+
+    .day-header.masterclass {
+      background: linear-gradient(135deg, #6c5ce7, #5a4bd1);
+      color: var(--white);
+    }
+
+    .day-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .day-date {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+      font-size: 0.75rem;
+      opacity: 0.85;
+    }
+
+    .day-location {
+      padding: 0.5rem 1.25rem;
+      background: rgba(0,0,0,0.02);
+      font-size: 0.75rem;
+      color: var(--charcoal);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .day-location svg {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+    }
+
+    .day-sessions {
+      padding: 1rem 1.25rem;
+    }
+
+    .session {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .session:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .session:first-child {
+      padding-top: 0;
+    }
+
+    .session-time {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 0.72rem;
+      color: var(--charcoal);
+      white-space: nowrap;
+      min-width: 42px;
+      padding-top: 2px;
+    }
+
+    .session-title {
+      font-size: 0.88rem;
+      color: #333;
+      line-height: 1.45;
+    }
+
+    .session-title strong {
+      color: var(--fuchsia);
+    }
+
+    .break-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0;
+      color: #999;
+      font-size: 0.8rem;
+      font-style: italic;
+    }
+
+    .break-row::before,
+    .break-row::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(0,0,0,0.08);
+    }
+
+    .note-section {
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .note-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2rem;
+      border-left: 4px solid var(--fuchsia);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .note-card h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--fuchsia);
+      margin-bottom: 0.5rem;
+    }
+
+    .note-card p {
+      font-size: 0.9rem;
+      color: var(--charcoal);
+      line-height: 1.6;
+    }
+
+    footer {
+      background: var(--dark);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    footer p {
+      color: rgba(255, 255, 255, 0.35);
+      font-size: 0.8rem;
+    }
+
+    footer .footer-brand {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      color: var(--fuchsia);
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+
+      .days-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .legend-inner {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">Maybe This Time</a>
+    <a href="index.html" class="nav-back">&larr; Back to Home</a>
+  </nav>
+
+  <section class="hero">
+    <h1>Schedule</h1>
+    <p>6 weeks of preparation, communication, and wellbeing</p>
+  </section>
+
+  <div class="legend">
+    <div class="legend-inner">
+      <div class="legend-item"><span class="legend-dot zoom"></span> Zoom (Mon/Wed)</div>
+      <div class="legend-item"><span class="legend-dot in-person"></span> In Person (Sun)</div>
+      <div class="legend-item"><span class="legend-dot recording"></span> Recording</div>
+      <div class="legend-item"><span class="legend-dot masterclass"></span> Masterclass</div>
+    </div>
+  </div>
+
+  <div class="schedule">
+
+    <div class="week">
+      <div class="week-header">
+        <span class="week-number">Week 0</span>
+        <div class="week-dates">10 &ndash; 14 June</div>
+      </div>
+      <div class="days-grid">
+        <div class="day-card">
+          <div class="day-header zoom">
+            <span class="day-name">Wednesday</span>
+            <span class="day-date">10 Jun</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Zoom
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">7:00</span>
+              <span class="session-title">Introduction to Masterclass &mdash; what will we be doing and what are the outcomes?</span>
+            </div>
+            <div class="session">
+              <span class="session-time">8:30</span>
+              <span class="session-title">Recording</span>
+            </div>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-header in-person">
+            <span class="day-name">Sunday</span>
+            <span class="day-date">14 Jun</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Camberwell Library
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">1:00</span>
+              <span class="session-title">Intro to the principles of MTT: <strong>Communication, Wellbeing, Preparation</strong></span>
+            </div>
+            <div class="session">
+              <span class="session-time">4:30</span>
+              <span class="session-title">Class and Audition Etiquette</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="week-header">
+        <span class="week-number">Week 1</span>
+        <div class="week-dates">15 &ndash; 21 June</div>
+      </div>
+      <div class="days-grid">
+        <div class="day-card">
+          <div class="day-header zoom">
+            <span class="day-name">Monday</span>
+            <span class="day-date">15 Jun</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Zoom
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">6:00</span>
+              <span class="session-title">The Psychology of Performance</span>
+            </div>
+            <div class="session">
+              <span class="session-time">7:00</span>
+              <span class="session-title">Emotional Intelligence</span>
+            </div>
+            <div class="session">
+              <span class="session-time">8:00</span>
+              <span class="session-title">The Games We Play</span>
+            </div>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-header recording">
+            <span class="day-name">Wednesday</span>
+            <span class="day-date">17 Jun</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Recording (async)
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time"></span>
+              <span class="session-title">Recording sessions + prework links</span>
+            </div>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-header in-person">
+            <span class="day-name">Sunday</span>
+            <span class="day-date">21 Jun</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Toorak Library
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">2:00</span>
+              <span class="session-title">Value Proposition &amp; Customers</span>
+            </div>
+            <div class="session">
+              <span class="session-time">3:00</span>
+              <span class="session-title">Emotional Intelligence Extension</span>
+            </div>
+            <div class="session">
+              <span class="session-time">4:00</span>
+              <span class="session-title">Mind Mapping</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="week-header">
+        <span class="week-number">Week 2</span>
+        <div class="week-dates">22 &ndash; 28 June</div>
+      </div>
+      <div class="days-grid">
+        <div class="day-card">
+          <div class="day-header zoom">
+            <span class="day-name">Monday</span>
+            <span class="day-date">22 Jun</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Zoom
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">6:00</span>
+              <span class="session-title">First Impressions</span>
+            </div>
+            <div class="session">
+              <span class="session-time">7:00</span>
+              <span class="session-title">Video Auditions</span>
+            </div>
+            <div class="session">
+              <span class="session-time">8:00</span>
+              <span class="session-title">Working with Cognitive Biases</span>
+            </div>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-header recording">
+            <span class="day-name">Wednesday</span>
+            <span class="day-date">24 Jun</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Recording (async)
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time"></span>
+              <span class="session-title">Recording sessions + prework links</span>
+            </div>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-header in-person">
+            <span class="day-name">Sunday</span>
+            <span class="day-date">28 Jun</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            The Space &mdash; Red Room
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">1:00</span>
+              <span class="session-title">Checking in on Values</span>
+            </div>
+            <div class="session">
+              <span class="session-time">2:00</span>
+              <span class="session-title">Goal Setting</span>
+            </div>
+            <div class="session">
+              <span class="session-time">3:00</span>
+              <span class="session-title">Preparation for the Audition Room</span>
+            </div>
+            <div class="session">
+              <span class="session-time">4:00</span>
+              <span class="session-title">Movement Exploration</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="week-header">
+        <span class="week-number">Week 3</span>
+        <div class="week-dates">29 Jun &ndash; 5 Jul</div>
+      </div>
+      <div class="days-grid">
+        <div class="day-card">
+          <div class="day-header zoom">
+            <span class="day-name">Monday</span>
+            <span class="day-date">29 Jun</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Zoom
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">6:00</span>
+              <span class="session-title">Pitch Yourself</span>
+            </div>
+            <div class="session">
+              <span class="session-time">7:00</span>
+              <span class="session-title">Scene Work on Film</span>
+            </div>
+            <div class="session">
+              <span class="session-time">8:00</span>
+              <span class="session-title">Swinging a Show</span>
+            </div>
+            <div class="session">
+              <span class="session-time">9:00</span>
+              <span class="session-title">How to Prepare Quickly</span>
+            </div>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-header masterclass">
+            <span class="day-name">Wednesday</span>
+            <span class="day-date">1 Jul</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Be You Studio, Toorak
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">6:00</span>
+              <span class="session-title">Masterclass One <em>(Names TBC)</em></span>
+            </div>
+            <div class="session">
+              <span class="session-time">7:15</span>
+              <span class="session-title">Masterclass Two <em>(Names TBC)</em></span>
+            </div>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-header in-person">
+            <span class="day-name">Sunday</span>
+            <span class="day-date">5 Jul</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            The Space &mdash; Red Room
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">1:00</span>
+              <span class="session-title">Moment of Reflection</span>
+            </div>
+            <div class="session">
+              <span class="session-time">1:30</span>
+              <span class="session-title">Preparation for the Body</span>
+            </div>
+            <div class="break-row">15 min break</div>
+            <div class="session">
+              <span class="session-time">3:00</span>
+              <span class="session-title">Pre-Dance Audition Preparation</span>
+            </div>
+            <div class="session">
+              <span class="session-time">3:30</span>
+              <span class="session-title">Mock Dance Audition</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="week-header">
+        <span class="week-number">Week 4</span>
+        <div class="week-dates">6 &ndash; 12 July</div>
+      </div>
+      <div class="days-grid">
+        <div class="day-card">
+          <div class="day-header zoom">
+            <span class="day-name">Monday</span>
+            <span class="day-date">6 Jul</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Zoom
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">6:00</span>
+              <span class="session-title">Organise Your Artistic Life</span>
+            </div>
+            <div class="session">
+              <span class="session-time">7:00</span>
+              <span class="session-title">Acting in Context</span>
+            </div>
+            <div class="session">
+              <span class="session-time">8:00</span>
+              <span class="session-title">Nailing the Brief</span>
+            </div>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-header masterclass">
+            <span class="day-name">Wednesday</span>
+            <span class="day-date">8 Jul</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Be You Studio, Toorak
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">6:00</span>
+              <span class="session-title">Masterclass One <em>(Names TBC)</em></span>
+            </div>
+            <div class="session">
+              <span class="session-time">7:15</span>
+              <span class="session-title">Masterclass Two <em>(Names TBC)</em></span>
+            </div>
+            <div class="session">
+              <span class="session-time"></span>
+              <span class="session-title">Practice giving tempo</span>
+            </div>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-header in-person">
+            <span class="day-name">Sunday</span>
+            <span class="day-date">12 Jul</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            The Space &mdash; Red Room
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">1:00</span>
+              <span class="session-title">Mental Performance Preparation</span>
+            </div>
+            <div class="session">
+              <span class="session-time">2:00</span>
+              <span class="session-title">Mock Singing Audition</span>
+            </div>
+            <div class="break-row">15 min break</div>
+            <div class="session">
+              <span class="session-time">4:00</span>
+              <span class="session-title">Second Round Auditions</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="week-header">
+        <span class="week-number">Week 5</span>
+        <div class="week-dates">13 &ndash; 19 July</div>
+      </div>
+      <div class="days-grid">
+        <div class="day-card">
+          <div class="day-header zoom">
+            <span class="day-name">Monday</span>
+            <span class="day-date">13 Jul</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Zoom
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">6:00</span>
+              <span class="session-title">Introduce Yourself</span>
+            </div>
+            <div class="session">
+              <span class="session-time">7:00</span>
+              <span class="session-title">Represent Yourself</span>
+            </div>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-header masterclass">
+            <span class="day-name">Wednesday</span>
+            <span class="day-date">15 Jul</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Be You Studio, Toorak
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">6:00</span>
+              <span class="session-title">Masterclass One <em>(Names TBC)</em></span>
+            </div>
+            <div class="session">
+              <span class="session-time">7:15</span>
+              <span class="session-title">Masterclass Two <em>(Names TBC)</em></span>
+            </div>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-header in-person">
+            <span class="day-name">Sunday</span>
+            <span class="day-date">19 Jul</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            The Space &mdash; Red Room
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">1:00</span>
+              <span class="session-title">Emotional Performance Preparation</span>
+            </div>
+            <div class="session">
+              <span class="session-time">2:00</span>
+              <span class="session-title">Mock Audition</span>
+            </div>
+            <div class="break-row">15 min break</div>
+            <div class="session">
+              <span class="session-time">4:00</span>
+              <span class="session-title">Mock Audition</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="week-header">
+        <span class="week-number">Week 6</span>
+        <div class="week-dates">20 &ndash; 26 July</div>
+      </div>
+      <div class="days-grid">
+        <div class="day-card">
+          <div class="day-header zoom">
+            <span class="day-name">Monday</span>
+            <span class="day-date">20 Jul</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Zoom
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">6:00</span>
+              <span class="session-title">Review Communication</span>
+            </div>
+            <div class="session">
+              <span class="session-time">7:00</span>
+              <span class="session-title">Review Preparation</span>
+            </div>
+            <div class="session">
+              <span class="session-time">8:00</span>
+              <span class="session-title">Review Wellbeing</span>
+            </div>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-header masterclass">
+            <span class="day-name">Wednesday</span>
+            <span class="day-date">22 Jul</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Be You Studio, Toorak
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">6:00</span>
+              <span class="session-title">Masterclass One <em>(Names TBC)</em></span>
+            </div>
+            <div class="session">
+              <span class="session-time">7:15</span>
+              <span class="session-title">Masterclass Two <em>(Names TBC)</em></span>
+            </div>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-header in-person">
+            <span class="day-name">Sunday</span>
+            <span class="day-date">26 Jul</span>
+          </div>
+          <div class="day-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            MC Showroom
+          </div>
+          <div class="day-sessions">
+            <div class="session">
+              <span class="session-time">11:00</span>
+              <span class="session-title"><strong>11am &ndash; 3pm</strong> &mdash; Recording on a Stage</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note-section">
+    <div class="note-card">
+      <h3>Foundations of Music Theory for Beginners</h3>
+      <p>Running alongside the program &mdash; details to be confirmed.</p>
+    </div>
+  </div>
+
+  <footer>
+    <p><span class="footer-brand">MAYBE THIS TIME</span> &mdash; Be You Ed's</p>
+  </footer>
+
+</body>
+</html>
