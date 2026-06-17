@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maybe This Time 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --fuchsia: #FF3377;
+      --gold: #FFCC00;
+      --white: #FFFFFF;
+      --dark: #1a1a2e;
+      --fuchsia-dark: #cc2961;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--fuchsia);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      background: linear-gradient(160deg, var(--fuchsia) 0%, var(--fuchsia-dark) 100%);
+    }
+
+    .roundel {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 8px solid var(--gold);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+      background: var(--fuchsia);
+      box-shadow: 0 0 40px rgba(255, 204, 0, 0.3);
+      animation: pulse-border 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 0 30px rgba(255, 204, 0, 0.25); }
+      50% { box-shadow: 0 0 50px rgba(255, 204, 0, 0.5); }
+    }
+
+    .roundel-text {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      line-height: 1.2;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    .hero-tagline {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: var(--gold);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .hero-subtitle {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 400;
+      font-size: 1.15rem;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 480px;
+      line-height: 1.6;
+    }
+
+    .links-section {
+      background-color: var(--dark);
+      padding: 4rem 1.5rem;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-header h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-header p {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.95rem;
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .link-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      text-decoration: none;
+      color: var(--white);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .link-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--fuchsia), var(--gold));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .link-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 204, 0, 0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .link-card:hover::before {
+      opacity: 1;
+    }
+
+    .link-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .link-icon.fuchsia {
+      background: rgba(255, 51, 119, 0.2);
+      color: var(--fuchsia);
+    }
+
+    .link-icon.gold {
+      background: rgba(255, 204, 0, 0.2);
+      color: var(--gold);
+    }
+
+    .link-card h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+      color: var(--white);
+    }
+
+    .link-card p {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.5;
+    }
+
+    .link-arrow {
+      margin-top: auto;
+      padding-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: transform 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .link-card:hover .link-arrow {
+      transform: translateX(4px);
+    }
+
+    .tasks-section {
+      background: linear-gradient(160deg, var(--dark) 0%, #16213e 100%);
+      padding: 4rem 1.5rem;
+    }
+
+    .task-banner {
+      max-width: 700px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, var(--fuchsia), var(--fuchsia-dark));
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(255, 51, 119, 0.25);
+    }
+
+    .task-banner-label {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .task-banner h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.35rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .task-banner p {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      display: inline-block;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: var(--dark);
+    }
+
+    .btn-gold:hover {
+      background: #ffd633;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 204, 0, 0.35);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--gold);
+      color: var(--gold);
+    }
+
+    .btn-outline:hover {
+      background: var(--gold);
+      color: var(--dark);
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background: var(--dark);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    footer p {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.8rem;
+    }
+
+    footer .footer-brand {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      color: var(--fuchsia);
+    }
+
+    @media (max-width: 600px) {
+      .roundel {
+        width: 170px;
+        height: 170px;
+      }
+
+      .roundel-text {
+        font-size: 0.9rem;
+      }
+
+      .hero-tagline {
+        font-size: 1.5rem;
+      }
+
+      .links-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="roundel">
+      <span class="roundel-text">Maybe<br>This<br>Time</span>
+    </div>
+    <h1 class="hero-tagline">Be You Ed's</h1>
+    <p class="hero-subtitle">Your hub for everything MTT 2026. Links, tasks, and resources — all in one place.</p>
+  </section>
+
+  <section class="links-section">
+    <div class="section-header">
+      <h2>Important Links</h2>
+      <p>Everything you need, one click away</p>
+    </div>
+
+    <div class="links-grid">
+      <a href="https://www.facebook.com/groups/1669188514123304" class="link-card" target="_blank" rel="noopener">
+        <div class="link-icon fuchsia">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </div>
+        <h3>Facebook Group</h3>
+        <p>Join the conversation, get updates, and connect with your team.</p>
+        <span class="link-arrow">Visit &rarr;</span>
+      </a>
+
+      <a href="https://docs.google.com/spreadsheets/u/3/d/11pwehFyGv3kF7G_x_VBbCf7jifn-0Y0j/edit?usp=sharing&ouid=106245250167922393851&rtpof=true&sd=true" class="link-card" id="schedule-link" target="_blank" rel="noopener">
+        <div class="link-icon gold">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <h3>Schedule</h3>
+        <p>Full course schedule — topics, sessions, and key dates.</p>
+        <span class="link-arrow">View schedule &rarr;</span>
+      </a>
+
+      <a href="#" class="link-card" id="casting-link" target="_blank" rel="noopener">
+        <div class="link-icon fuchsia">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>Casting Exercise</h3>
+        <p>Mamma Mia self-tape casting — watch, rate, and discuss with your team.</p>
+        <span class="link-arrow">Open spreadsheet &rarr;</span>
+      </a>
+
+      <a href="https://www.viacharacter.org/account/register?fbclid=IwY2xjawSe_TlleHRuA2FlbQIxMQBzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeLfVZZWWf2Xvzq4UwKhNOeJ9yPmypN-Sqp1FSZOdRxPNUN1jkr6ff5L0_x2E_aem_kn9DFSDodFzLjP1jdlrprA" class="link-card" target="_blank" rel="noopener">
+        <div class="link-icon gold">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h3>VIA Character Strengths</h3>
+        <p>Discover your personal strengths — take the free assessment before Sunday.</p>
+        <span class="link-arrow">Take the test &rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="tasks-section">
+    <div class="task-banner">
+      <div class="task-banner-label">Current Task</div>
+      <h3>VIA Character Strengths Assessment</h3>
+      <p>Find some time before Sunday to take the free strengths test at viacharacter.org. No need to pay for the certificate — the free results are all you need.</p>
+      <a href="https://www.viacharacter.org/account/register?fbclid=IwY2xjawSe_TlleHRuA2FlbQIxMQBzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeLfVZZWWf2Xvzq4UwKhNOeJ9yPmypN-Sqp1FSZOdRxPNUN1jkr6ff5L0_x2E_aem_kn9DFSDodFzLjP1jdlrprA" class="btn btn-gold" target="_blank" rel="noopener">Take the Assessment</a>
+    </div>
+  </section>
+
+  <footer>
+    <p><span class="footer-brand">MAYBE THIS TIME</span> 2026 &mdash; Be You Ed's</p>
+  </footer>
+
+</body>
+</html>

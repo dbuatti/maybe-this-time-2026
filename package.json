@@ -1,0 +1,9 @@
+{
+  "name": "maybe-this-time-2026",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "npx vercel --prod",
+    "dev": "npx serve ."
+  }
+}
